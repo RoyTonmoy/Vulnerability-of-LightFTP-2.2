@@ -1,0 +1,38 @@
+# Deployed the server into Lubuntu.
+
+# prepare
+apt-get install -y --no-install-recommends wget unzip gcc make libc6-dev gnutls-dev uuid
+
+cd lightftp/Source/Release
+make
+
+# application binary
+/home/artful/server/LightFTP-2.2/Source/Release/fftp
+/home/artful/server/LightFTP-2.2-patched/Source/Release/fftp
+
+/*
+sudo useradd -M -d /home/artful/server/ -U ftp
+chown ftp:ftp /home/artful/server/LightFTP-2.2/Source/Release/fftp
+runuser -u ftp -g ftp /home/artful/server/LightFTP-2.2/Source/Release/fftp /home/artful/server/fftp.conf
+*/
+
+sudo /home/artful/server/LightFTP-2.2/Source/Release/fftp /home/artful/server/fftp.conf
+sudo /home/artful/server/LightFTP-2.2-patched/Source/Release/fftp /home/artful/server/fftp.conf
+
+
+sudo ufw enable
+sudo ufw allow 21 // all tcp and udp
+sudo ufw allow 21/tcp
+sudo ufw allow 1024:65535/tcp /// for passive modes
+sudo ufw status
+
+
+
+
+
+main()
+{
+    ftp_tls_init();
+    ftpmain();   // ftpserv.c
+    ftp_tls_cleanup();
+}
